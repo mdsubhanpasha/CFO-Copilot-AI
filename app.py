@@ -47,20 +47,20 @@ st.dataframe(df)
 
 if api_key:
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash')
+        model = genai.GenerativeModel('gemini-1.5-flash-latest') # <-- FIXED HERE
 
         st.subheader("🤖 AI Analysis")
         if st.button("Analyze Transactions"):
             with st.spinner("Analyzing..."):
                 sample_data = df.head(15).to_string()
                 prompt = f"""
-                You are FinVeda AI, a Telugu banking assistant.
+                You are FinVeda AI, a Banking Assistant.
                 Analyze these credit card transactions:
                 {sample_data}
-                Task in Telugu:
+                Task in English:
                 1. Check for any duplicate or double transaction.
                 2. Check for any unusually high amount.
-                3. Give 3 safety tips with emojis.
+                3. Give 3 safety tips.
                 Reply in short, 4 lines only.
                 """
                 res = model.generate_content(prompt)
@@ -68,15 +68,15 @@ if api_key:
 
         st.subheader("❓ AI Evaluation Test")
         test_questions = [
-            "nenu refund ela adagali",
-            "naku double debit undi em cheyali",
-            "nenu home loan eligibility entha"
+            "How can I request a refund?",
+            "I have a double debit. What should I do?",
+            "What is my home loan eligibility?"
         ]
 
         selected_question = st.selectbox("Select a question to ask FinVeda AI:", test_questions)
         if st.button("Ask Question"):
             with st.spinner("Thinking..."):
-                res = model.generate_content(f"You are FinVeda AI. Answer in Telugu politely and short: {selected_question}")
+                res = model.generate_content(f"You are FinVeda AI. Answer in English politely and short: {selected_question}")
                 st.info(res.text)
 
     except Exception as e:

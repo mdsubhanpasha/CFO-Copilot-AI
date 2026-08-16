@@ -1,6 +1,5 @@
 # ================================================
-# 🚀 FinVeda AI - Credit Card Analyzer
-# Works on: Kaggle + Google Jules + Colab
+# FinVeda AI - Credit Card Analyzer
 # ================================================
 
 import pandas as pd
@@ -10,35 +9,27 @@ import numpy as np
 from datetime import datetime, timedelta
 
 print("="*60)
-print("🚀 FinVeda AI - Credit Card Analyzer")
+print("FinVeda AI - Credit Card Analyzer")
 print("="*60)
 
-# CHECK CURRENT FOLDER
-print("📂 Current Working Directory:", os.getcwd())
+print("Current Working Directory:", os.getcwd())
 
-# 1. LOAD API KEY - Kaggle Secret / Jules Env Variable
-try:
-    from kaggle_secrets import UserSecretsClient
-    user_secrets = UserSecretsClient()
-    API_KEY = user_secrets.get_secret('GEMINI_API_KEY')
-    print("✅ API Key loaded from Kaggle Secrets")
-except:
-    API_KEY = os.environ.get('GEMINI_API_KEY') # For Google Jules
-    print("✅ API Key loaded from Environment Variable")
+# 1. LOAD API KEY
+API_KEY = os.environ.get('GEMINI_API_KEY')
+print("API Key loaded from Environment Variable")
 
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
-print("✅ Gemini 1.5 Flash Connected\n")
+model = genai.GenerativeModel('gemini-1.5-flash-latest') # <-- FIXED HERE
+print("Gemini Connected\n")
 
-# 2. AUTO FIND OR CREATE CSV
+# 2. READ CSV
 os.makedirs('data', exist_ok=True)
 csv_path = 'data/credit_card.csv'
-
 if os.path.exists(csv_path):
     df = pd.read_csv(csv_path)
-    print(f"✅ Data Loaded from: {csv_path}")
+    print("Data Loaded from:", csv_path)
 else:
-    print("⚠️ File not found. Creating example credit_card.csv for demo")
+    print("File not found. Creating example credit_card.csv for demo")
     data = {
         'Date': [datetime.now() - timedelta(days=x) for x in range(20)],
         'Merchant': ['Amazon', 'Flipkart', 'Swiggy', 'Zomato', 'Amazon', 'BigBasket', 'Uber', 'IRCTC', 'Netflix', 'PhonePe',
@@ -50,41 +41,41 @@ else:
     }
     df = pd.DataFrame(data)
     df.to_csv(csv_path, index=False)
-    print(f"✅ Example file created at: {csv_path}")
+    print("Example file created at:", csv_path)
 
-print(f"✅ Data Shape: {df.shape}")
+print("Data Shape:", df.shape)
 print(df.head(3))
 
 print("\n" + "="*60)
-print("--- AI ANALYSIS ---")
+print("AI ANALYSIS")
 
 sample_data = df.head(15).to_string()
 prompt = """
-You are FinVeda AI, a Telugu banking assistant.
+You are FinVeda AI, a Banking Assistant.
 Analyze these credit card transactions:
 """ + sample_data + """
-Task in Telugu:
+Task in English:
 1. Check for any duplicate or double transaction.
 2. Check for any unusually high amount.
-3. Give 3 safety tips with emojis.
+3. Give 3 safety tips.
 Reply in short, 4 lines only.
 """
 res = model.generate_content(prompt)
 print(res.text)
 
 print("\n" + "="*60)
-print("--- AI EVALUATION TEST ---")
+print("AI EVALUATION TEST")
 
 test_questions = [
-    "nenu refund ela adagali",
-    "naku double debit undi em cheyali",
-    "nenu home loan eligibility entha"
+    "How can I request a refund?",
+    "I have a double debit. What should I do?",
+    "What is my home loan eligibility?"
 ]
 
 for i, q in enumerate(test_questions, 1):
-    res = model.generate_content(f"You are FinVeda AI. Answer in Telugu politely and short: {q}")
+    res = model.generate_content(f"You are FinVeda AI. Answer in English politely and short: {q}")
     print(f"\nQ{i}: {q}")
     print(f"A{i}: {res.text}")
     print("-"*40)
 
-print("\n✅ Evaluation Complete. FinVeda AI is LIVE")
+print("\nEvaluation Complete. FinVeda AI is LIVE")
