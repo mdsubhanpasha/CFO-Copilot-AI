@@ -47,7 +47,7 @@ st.dataframe(df)
 
 if api_key:
     try:
-        model = genai.GenerativeModel('gemini-1.5-flash-latest') # <-- FIXED HERE
+        model = genai.GenerativeModel('gemini-1.5-flash')
 
         st.subheader("🤖 AI Analysis")
         if st.button("Analyze Transactions"):

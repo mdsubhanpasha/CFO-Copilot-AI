@@ -19,7 +19,7 @@ API_KEY = os.environ.get('GEMINI_API_KEY')
 print("API Key loaded from Environment Variable")
 
 genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash-latest') # <-- FIXED HERE
+model = genai.GenerativeModel('gemini-1.5-flash')
 print("Gemini Connected\n")
 
 # 2. READ CSV
