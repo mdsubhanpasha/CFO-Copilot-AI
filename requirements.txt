@@ -1,0 +1,8 @@
+yfinance==0.2.40
+plotly
+python-dotenv
+requests
+pandas
+numpy
+streamlit
+google-generativeai

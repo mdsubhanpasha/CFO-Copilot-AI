@@ -9,7 +9,6 @@ Original file is located at
 
 # ===== FINVEDA AI v1.0 - Multi-Agent CFO Dashboard =====
 # Built by: [Your Name] | Tech: Python + Azure GPT-4o-mini
-!pip install -q yfinance==0.2.40 plotly python-dotenv requests
 
 import os, yfinance as yf, plotly.graph_objects as go, pandas as pd, numpy as np, requests, getpass
 from datetime import datetime
