@@ -1,22 +1,18 @@
-# 🚀 FinVeda-AI - Multi-Agent CFO Dashboard
+# 🚀 CFO Copilot - AI Banking Assistant
 
-I built an AI CFO that researches stocks for me in 30 seconds.
+I built an AI CFO that researches stocks for me in 30 seconds and analyzes my banking needs.
 
 ### What it does
-1.  **📰 News Agent**: Azure GPT-4o-mini summarizes risks & opportunities
-2.  **📊 Quant Agent**: Gives data-driven BUY/SELL/HOLD signals 
-3.  **💼 Portfolio Agent**: Provides 1-month outlook and allocation %
-4.  **📈 Live Charts**: Interactive 3-month candlestick charts with Plotly
+1. **Feature 1**: Upload CSV → Detect 5 Anomalies with red alerts.
+2. **Feature 2**: Multilingual Chat with Google Gemini 2.0 Flash - Telugu + English.
+3. **Feature 3**: CFO Dashboard with NIFTY 50 chart using yfinance + Plotly + Azure OpenAI insights.
 
 ### Tech Stack
-`Python` `Azure OpenAI` `yfinance` `Plotly` `Pandas`
+`Python` `Azure OpenAI` `yfinance` `Plotly` `Pandas` `Google GenAI` `Streamlit`
 
 ### How to Run
 1.  `pip install -r requirements.txt`
-2.  Create `.env` file from `.env.example` and add your Azure keys
-3.  Run in Colab/Jupyter
+2.  `streamlit run app.py`
 
 ### Demo Mode
-No API key? No problem. App automatically falls back to demo mode and never crashes.
-
-**Built in 3 Days** | **Open to SDE/ML Roles** | **DM for Colab Link**
+No API keys? No problem. App automatically falls back to demo mode.
