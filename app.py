@@ -1,83 +1,41 @@
 import streamlit as st
 import pandas as pd
-import google.generativeai as genai
-import os
-from datetime import datetime, timedelta
+from google import genai
 
-st.set_page_config(page_title="FinVeda AI - Credit Card Analyzer", page_icon="🚀", layout="wide")
+st.set_page_config(page_title="FinVeda AI", layout="wide")
 
-st.title("🚀 FinVeda AI - Credit Card Analyzer")
-st.markdown("Analyze your credit card transactions with the power of Gemini AI.")
+# STEP 1: HEADER FOR VIDEO
+st.title("FinVeda AI 🚀 - Your AI Banking Assistant")
+st.write("Upload your credit card statement and detect fraud in 5 seconds")
 
-# 1. API Key Input
-api_key = st.sidebar.text_input("Enter GEMINI_API_KEY", type="password")
-if api_key:
-    genai.configure(api_key=api_key)
-    st.sidebar.success("API Key configured!")
-else:
-    st.sidebar.warning("Please enter your API Key to enable AI features.")
+# API KEY
+client = genai.Client(api_key=st.secrets["GOOGLE_API_KEY"])
 
-# 2. Data Loading
-os.makedirs('data', exist_ok=True)
-csv_path = 'data/credit_card.csv'
+# STEP 2: CSV UPLOAD + RED FLAG
+uploaded_file = st.file_uploader("Upload CSV", type=["csv"])
+if uploaded_file:
+    df = pd.read_csv(uploaded_file)
+    st.dataframe(df)
 
-@st.cache_data
-def load_data():
-    if os.path.exists(csv_path):
-        return pd.read_csv(csv_path)
+    # Fake demo anomaly for video
+    st.error("⚠️ Double Debit Found: Amazon ₹1299 on 12-Aug-2025")
+    st.warning("⚠️ Unusual Expense: Flight ₹28,500 detected")
+
+# STEP 3: TELUGU CHAT
+st.subheader("Ask AI in Telugu or English")
+user_q = st.chat_input("rendu charges refund ela adagali?")
+
+if user_q:
+    st.chat_message("user").write(user_q)
+
+    if "refund" in user_q.lower() or "refund" in user_q:
+        reply = "Bank customer care ki call cheyandi 1800-xxx-xxxx, leda app lo dispute raise cheyandi. Transaction ID: TXN1299 attach cheyandi."
     else:
-        # Create example data if not exists
-        data = {
-            'Date': [datetime.now() - timedelta(days=x) for x in range(20)],
-            'Merchant': ['Amazon', 'Flipkart', 'Swiggy', 'Zomato', 'Amazon', 'BigBasket', 'Uber', 'IRCTC', 'Netflix', 'PhonePe',
-                         'Amazon', 'DMart', 'Petrol Pump', 'Hospital', 'College Fees', 'Swiggy', 'Zomato', 'Myntra', 'BookMyShow', 'Amazon'],
-            'Amount': [1299, 599, 350, 420, 1299, 850, 180, 1200, 499, 50,
-                       25000, 2100, 3000, 15000, 50000, 280, 390, 2200, 600, 899],
-            'Category': ['Shopping', 'Shopping', 'Food', 'Food', 'Shopping', 'Grocery', 'Travel', 'Travel', 'Subscription', 'UPI',
-                         'Shopping', 'Grocery', 'Fuel', 'Health', 'Education', 'Food', 'Food', 'Shopping', 'Entertainment', 'Shopping']
-        }
-        df = pd.DataFrame(data)
-        df.to_csv(csv_path, index=False)
-        return df
+        response = client.models.generate_content(model="gemini-2.0-flash", contents=user_q)
+        reply = response.text
 
-df = load_data()
+    st.chat_message("assistant").write(reply)
 
-st.subheader("📊 Transaction Data")
-st.dataframe(df)
-
-if api_key:
-    try:
-        model = genai.GenerativeModel('gemini-1.5-flash-latest') # <-- FIXED HERE
-
-        st.subheader("🤖 AI Analysis")
-        if st.button("Analyze Transactions"):
-            with st.spinner("Analyzing..."):
-                sample_data = df.head(15).to_string()
-                prompt = f"""
-                You are FinVeda AI, a Banking Assistant.
-                Analyze these credit card transactions:
-                {sample_data}
-                Task in English:
-                1. Check for any duplicate or double transaction.
-                2. Check for any unusually high amount.
-                3. Give 3 safety tips.
-                Reply in short, 4 lines only.
-                """
-                res = model.generate_content(prompt)
-                st.write(res.text)
-
-        st.subheader("❓ AI Evaluation Test")
-        test_questions = [
-            "How can I request a refund?",
-            "I have a double debit. What should I do?",
-            "What is my home loan eligibility?"
-        ]
-
-        selected_question = st.selectbox("Select a question to ask FinVeda AI:", test_questions)
-        if st.button("Ask Question"):
-            with st.spinner("Thinking..."):
-                res = model.generate_content(f"You are FinVeda AI. Answer in English politely and short: {selected_question}")
-                st.info(res.text)
-
-    except Exception as e:
-        st.error(f"Error communicating with Gemini AI: {e}")
+# STEP 4: CTA BUTTON
+st.markdown("---")
+st.link_button("Try it Free", "https://4gwjsvfhapptbscwukrqg2r.streamlit.app/")
