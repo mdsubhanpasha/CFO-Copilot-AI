@@ -6,3 +6,4 @@ pandas
 numpy
 streamlit
 google-generativeai
+google-genai
